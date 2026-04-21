@@ -1,0 +1,18 @@
+services:
+  web_server:
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    networks:
+      - frontend
+    restart: always
+
+  cache_db:
+    image: redis:alpine
+    networks:
+      - backend
+    restart: always
+
+networks:
+  frontend:
+  backend:
