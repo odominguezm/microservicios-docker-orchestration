@@ -1,12 +1,14 @@
 version: '3.8'
 
 services:
+  # Nuestra aplicación Python/Flask
   web_app:
     build: ../app
     networks:
       - backend
     restart: always
 
+  # El Servidor Nginx como Proxy Inverso
   web_server:
     image: nginx:latest
     ports:
@@ -19,12 +21,34 @@ services:
     depends_on:
       - web_app
 
+  # La base de datos en memoria Redis
   cache_db:
     image: redis:alpine
     networks:
       - backend
     restart: always
 
+  # Fase 4: Panel de gestión Portainer
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - portainer_data:/data
+    ports:
+      - "9443:9443"
+    networks:
+      - frontend
+
+# Definición de Redes
 networks:
   frontend:
   backend:
+
+# Definición de Volúmenes Persistentes
+volumes:
+  portainer_data:
