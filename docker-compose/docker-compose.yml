@@ -1,14 +1,16 @@
 version: '3.8'
 
 services:
-  # Nuestra aplicación Python/Flask
   web_app:
     build: ../app
     networks:
       - backend
     restart: always
+    # Espera a que Redis esté realmente sano antes de intentar conectar
+    depends_on:
+      cache_db:
+        condition: service_healthy
 
-  # El Servidor Nginx como Proxy Inverso
   web_server:
     image: nginx:latest
     ports:
@@ -19,16 +21,21 @@ services:
       - frontend
       - backend
     depends_on:
-      - web_app
+      web_app:
+        condition: service_started
 
-  # La base de datos en memoria Redis
   cache_db:
     image: redis:alpine
     networks:
       - backend
     restart: always
+    # Prueba de salud para Redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
 
-  # Fase 4: Panel de gestión Portainer
   portainer:
     image: portainer/portainer-ce:latest
     container_name: portainer
@@ -44,11 +51,9 @@ services:
     networks:
       - frontend
 
-# Definición de Redes
 networks:
   frontend:
   backend:
 
-# Definición de Volúmenes Persistentes
 volumes:
   portainer_data:
