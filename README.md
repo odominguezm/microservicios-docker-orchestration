@@ -1,10 +1,10 @@
-Microservicios con Docker: Orquestación, Redes y Observabilidad
+## Microservicios con Docker: Orquestación, Redes y Observabilidad
 Este proyecto demuestra el despliegue de una arquitectura de microservicios robusta y escalable utilizando Docker y Docker Compose. La infraestructura se gestiona como código mediante Vagrant, garantizando un entorno de desarrollo idéntico al de producción.
 
-🚀 Descripción del Proyecto
+## 🚀 Descripción del Proyecto
 Se ha implementado un stack tecnológico completo que incluye un servidor web como Proxy Inverso, una API desarrollada en Python, una base de datos NoSQL para caché y una consola de gestión visual. El enfoque principal es la seguridad por segmentación de redes y la automatización.
 
-🛠️ Tecnologías Utilizadas
+## 🛠️ Tecnologías Utilizadas
 Infraestructura: Vagrant, VirtualBox (Ubuntu 22.04 LTS).
 
 Orquestación: Docker & Docker Compose V2.
@@ -19,14 +19,14 @@ Observabilidad: Portainer CE.
 
 Editor/Terminal: Neovim, Tmux, Zsh (Pop!_OS).
 
-🏗️ Arquitectura de Red y Servicios
+## 🏗️ Arquitectura de Red y Servicios
 El proyecto utiliza una estrategia de doble red (Dual-Network) para aislar los componentes sensibles:
 
 Frontend Network: Conecta el Proxy Inverso (Nginx) con el mundo exterior y la consola de gestión (Portainer).
 
 Backend Network: Una red privada donde reside la lógica de negocio (Python) y la persistencia (Redis). El mundo exterior no puede acceder directamente a Redis ni a la App de Python.
 
-📈 Progreso del Proyecto
+## 📈 Progreso del Proyecto
 Fase 1: Infraestructura como Código (IaC) ✅
 Automatización del aprovisionamiento de la VM con Vagrant.
 
@@ -49,7 +49,7 @@ Despliegue de Portainer para el monitoreo de recursos en tiempo real.
 
 Análisis de logs y gestión de contenedores vía GUI sobre HTTPS (Puerto 9443).
 
-⚙️ Cómo ejecutar este proyecto
+## ⚙️ Cómo ejecutar este proyecto
 Clonar el repositorio:
 
 Bash
