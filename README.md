@@ -1,76 +1,69 @@
-## Microservicios con Docker: Orquestación, Redes y Observabilidad
-Este proyecto demuestra el despliegue de una arquitectura de microservicios robusta y escalable utilizando Docker y Docker Compose. La infraestructura se gestiona como código mediante Vagrant, garantizando un entorno de desarrollo idéntico al de producción.
+# Microservicios con Docker: Orquestación, Redes y Resiliencia
+
+Este proyecto demuestra el despliegue de una arquitectura de microservicios robusta y escalable utilizando **Docker** y **Docker Compose**. La infraestructura se gestiona como código (IaC) mediante **Vagrant**, garantizando un entorno de desarrollo idéntico al de producción sobre **Pop!_OS**.
+
+
 
 ## 🚀 Descripción del Proyecto
-Se ha implementado un stack tecnológico completo que incluye un servidor web como Proxy Inverso, una API desarrollada en Python, una base de datos NoSQL para caché y una consola de gestión visual. El enfoque principal es la seguridad por segmentación de redes y la automatización.
+Se ha implementado un stack tecnológico de microservicios con un fuerte enfoque en la **seguridad por segmentación de redes** y la **resiliencia operativa**. A diferencia de un despliegue básico, este proyecto implementa mecanismos de auto-recuperación y verificación de estado (Healthchecks) para garantizar la disponibilidad de los servicios.
 
-## 🛠️ Tecnologías Utilizadas
-Infraestructura: Vagrant, VirtualBox (Ubuntu 22.04 LTS).
+### 🛠️ Tecnologías Utilizadas
+* **Infraestructura:** Vagrant, VirtualBox (Ubuntu 22.04 LTS).
+* **Orquestación:** Docker & Docker Compose V2.
+* **Backend:** Python 3.9 + Flask (API REST).
+* **Caché/Base de Datos:** Redis (Alpine Linux).
+* **Proxy/Web:** Nginx (Reverse Proxy).
+* **Observabilidad:** Portainer CE (Console de gestión visual).
+* **Entorno de desarrollo:** Neovim, Tmux, Zsh.
 
-Orquestación: Docker & Docker Compose V2.
+---
 
-Backend: Python 3.9 + Flask.
+## 🏗️ Arquitectura de Red y Resiliencia
 
-Caché/Base de Datos: Redis (Alpine Linux).
+### 🔐 Segmentación de Redes (Isolation)
+El proyecto utiliza una estrategia de **doble red** para aislar los componentes críticos:
+* **Frontend Net:** Conecta Nginx y Portainer con el tráfico externo.
+* **Backend Net:** Red privada que aísla la App y Redis, protegiendo los datos sensibles y evitando que la base de datos sea expuesta a internet.
 
-Proxy/Web: Nginx.
 
-Observabilidad: Portainer CE.
 
-Editor/Terminal: Neovim, Tmux, Zsh (Pop!_OS).
+### 🩺 Healthchecks y Dependencias de Servicio
+Se ha configurado una lógica de arranque inteligente para evitar fallos en cascada:
+1.  **Redis Health:** Se implementó un `healthcheck` que verifica la disponibilidad del servicio mediante `redis-cli ping` cada 5 segundos.
+2.  **App Resiliency:** La aplicación de Python cuenta con una dependencia condicionada (`service_healthy`). No inicia hasta que Redis confirma que está operativo.
+3.  **Auto-healing:** Todos los servicios incluyen políticas de reinicio automático (`restart: always`).
 
-## 🏗️ Arquitectura de Red y Servicios
-El proyecto utiliza una estrategia de doble red (Dual-Network) para aislar los componentes sensibles:
+---
 
-Frontend Network: Conecta el Proxy Inverso (Nginx) con el mundo exterior y la consola de gestión (Portainer).
+## 📈 Fases del Proyecto
 
-Backend Network: Una red privada donde reside la lógica de negocio (Python) y la persistencia (Redis). El mundo exterior no puede acceder directamente a Redis ni a la App de Python.
+1.  **Fase 1: Infraestructura IaC:** Aprovisionamiento automatizado de la VM con Vagrant y configuración del motor Docker.
+2.  **Fase 2: Redes y Almacenamiento:** Configuración de volúmenes persistentes y redes aisladas.
+3.  **Fase 3: Desarrollo y Proxy Inverso:** Dockerización de la API en Python y configuración de Nginx como punto de entrada único.
+4.  **Fase 4: Observabilidad:** Implementación de Portainer para el monitoreo visual de logs y gestión de contenedores.
+5.  **Fase 5: Optimización de Salud:** Configuración de Healthchecks y orquestación de dependencias entre servicios.
 
-## 📈 Progreso del Proyecto
-Fase 1: Infraestructura como Código (IaC) ✅
-Automatización del aprovisionamiento de la VM con Vagrant.
-
-Instalación automatizada del motor de Docker y Docker Compose V2.
-
-Fase 2: Definición de Orquestación ✅
-Creación del archivo docker-compose.yml base.
-
-Configuración de volúmenes persistentes y redes aisladas.
-
-Fase 3: Desarrollo y Proxy Inverso ✅
-Desarrollo de una API en Python/Flask que interactúa con Redis.
-
-Configuración de Nginx como Reverse Proxy, optimizando las cabeceras de tráfico y la seguridad.
-
-Creación de imágenes personalizadas mediante Dockerfiles optimizados (imágenes slim).
-
-Fase 4: Observabilidad y Gestión ✅
-Despliegue de Portainer para el monitoreo de recursos en tiempo real.
-
-Análisis de logs y gestión de contenedores vía GUI sobre HTTPS (Puerto 9443).
+---
 
 ## ⚙️ Cómo ejecutar este proyecto
-Clonar el repositorio:
 
-Bash
-git clone https://github.com/odominguezm/microservicios-docker-orchestration.git
-cd microservicios-docker-orchestration
-Levantar la infraestructura:
+1.  **Levantar la infraestructura:**
+    ```bash
+    vagrant up
+    vagrant ssh
+    ```
+2.  **Desplegar el Stack:**
+    ```bash
+    cd /vagrant/docker-compose
+    docker compose up -d --build
+    ```
 
-Bash
-vagrant up
-vagrant ssh
-Desplegar el Stack:
+### Puertos de Acceso:
+* **Aplicación Web:** Puerto 80 (vía Nginx).
+* **Dashboard Portainer:** Puerto 9443 (HTTPS seguro).
 
-Bash
-cd /vagrant/docker-compose
-docker compose up -d --build
-Acceso:
+---
 
-App: http://localhost:8080 (o la IP asignada).
-
-Portainer: https://localhost:9443.
-
-👨‍💻 Autor
-Orlando – Tecnólogo en Sistemas | Entusiasta de Linux y Free Software.
-Cali, Colombia.
+## 👨‍💻 Autor
+**Orlando** – Tecnólogo en Sistemas con más de 15 años de experiencia en IT.
+*Cali, Colombia.*
