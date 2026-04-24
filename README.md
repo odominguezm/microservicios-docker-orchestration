@@ -65,5 +65,5 @@ Se ha configurado una lógica de arranque inteligente para evitar fallos en casc
 ---
 
 ## 👨‍💻 Autor
-**Orlando** – Tecnólogo en Sistemas con más de 15 años de experiencia en IT.
+**Orlando** – SRE en progreso.
 *Cali, Colombia.*
